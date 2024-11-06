@@ -9,7 +9,8 @@ dotenv.config();
 app.use(express.json());
 app.use(cookieParser()); // Make sure to add this line
 app.use(cors({
-  origin: "http://localhost:5173", 
+  // origin: "http://localhost:5173", 
+  origin:"https://coderraushan.github.io/FrotendMern/",
   credentials: true
 }));
 const port = process.env.PORT || 9090;
