@@ -5,4 +5,4 @@ router.post("/register",SignUp);
 router.post("/login",Login);
 router.post("/logout",LogOut);
 router.get("/getdata",GetUserData);
-export default router;
+export default router;// localhost:8243/user/register
