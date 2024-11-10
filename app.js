@@ -8,11 +8,11 @@ const app = express();
 dotenv.config();
 app.use(express.json());
 app.use(cookieParser()); // Make sure to add this line
-app.use(cors({
-  // origin:"http://localhost:5173", 
-  origin:"https://coderraushan.github.io",
-  credentials: true
-}));
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://coderraushan.github.io"], // exact frontend URLs
+  credentials: true, 
+};
+app.use(cors(corsOptions));
 
 const port = process.env.PORT || 9090;
 const MongodbURI = process.env.mongodb_URI;

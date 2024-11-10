@@ -94,12 +94,14 @@ export const GetUserData = (req, res) =>
           console.log("Token verification error:", err); 
           return res.status(403).json({ error: "Invalid token" });
         }
+        console.log("i am comming");
         const userId = decoded.userId;
         const name = decoded.name;
         const email = decoded.email;
         return res.json({ userId, name, email });
       }catch(err)
       {
+        console.log("i am comming");
         return res.status(403).json({ error: "Token varification error:" });
       }
     });
