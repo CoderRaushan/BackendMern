@@ -33,26 +33,38 @@ export const SignUp = async (req, res) => {
   }
 };
 //for Register Login
-export const Login = async (req, res) => {
+export const Login = async (req, res) => 
+  {
   const { email, password } = req.body;
-  try {
-    if (!email || !password) {
+  try 
+  {
+
+    if (!email || !password) 
+    {
       return res.status(400).json({ error: "All fields are required!" });
     }
+
     const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+
+    if (!user || !(await bcrypt.compare(password, user.password))) 
+    {
       return res.status(400).json({ error: "Invalid user credential!" });
     }
-    if (user) {
+
+    if (user) 
+    {
       jwtTokenFunction(user._id, user.name, user.email, res); 
     }
-    return res.status(200).json({
+
+    return res.status(200).json(
+    {
       message: "User logged in successfully!",
       _id: user._id,
       name: user.name,
       email: user.email,
     });
-  } catch (error) {
+  } catch (error) 
+  {
     console.error("Login error:", error);
     return res.status(500).json({ error: "Internal server error!" });
   }
@@ -63,15 +75,17 @@ export const LogOut = async (req, res) => {
   {
     res.cookie('jwt', '', 
     { 
+
       httpOnly: true,
       expires: new Date(0),           
       secure: true,                
       sameSite: 'strict',
       path: '/',    
-    }
-    );
+    });
     return res.status(201).json({ message: "User Loged Out successfully!" });
-  } catch (error) 
+
+  } 
+  catch (error) 
   {
     console.log("error", error);
     return res.status(500).json({ error: "Internal server error!" });
@@ -82,19 +96,21 @@ export const LogOut = async (req, res) => {
 export const GetUserData = (req, res) => 
   {
     const token = req.cookies.jwt; 
+    console.log("token is this:",token);
     if (!token) 
     {
       return res.status(401).json({ error: "No token provided" });
-    }  
+    } 
     jwt.verify(token, process.env.JwtTokenKEY, (err, decoded) => {
       try
-      {
+      { 
         if (err) 
         {
           console.log("Token verification error:", err); 
           return res.status(403).json({ error: "Invalid token" });
         }
         console.log("i am comming");
+        console.log("decoded data is :",decoded.userId);
         const userId = decoded.userId;
         const name = decoded.name;
         const email = decoded.email;

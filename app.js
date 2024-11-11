@@ -9,7 +9,8 @@ dotenv.config();
 app.use(express.json());
 app.use(cookieParser()); // Make sure to add this line
 const corsOptions = {
-  origin: ["https://rausauth.netlify.app","http://localhost:5173", "https://coderraushan.github.io"], // exact frontend URLs
+  // origin: ["https://rausauth.netlify.app","http://localhost:5173", "https://coderraushan.github.io"], // exact frontend URLs
+  origin:"http://localhost:5173",
   credentials: true, 
 };
 app.use(cors(corsOptions));
