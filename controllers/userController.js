@@ -79,7 +79,7 @@ export const LogOut = async (req, res) => {
       httpOnly: true,
       expires: new Date(0),           
       secure: true,                
-      sameSite: 'strict',
+      sameSite: 'None',
       path: '/',    
     });
     return res.status(201).json({ message: "User Loged Out successfully!" });
