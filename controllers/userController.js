@@ -3,6 +3,37 @@ import bcrypt from "bcryptjs";
 import jwtTokenFunction from "../jwt/JwtToken.js";
 import jwt from "jsonwebtoken";
 //for Register user
+// export const SignUp = async (req, res) => {
+//   const { name, email, password, confirmPassword } = req.body;
+//   try {
+//     if (!name || !email || !password || !confirmPassword) {
+//       return res.status(400).json({ error: "All fields are required!" });
+//     }
+
+//     if (password !== confirmPassword) {
+//       return res.status(400).json({ error: "Password do not matches" });
+//     }
+//     const user = await User.findOne({ email: email });
+//     if (user) {
+//       return res.status(400).json({ error: "User already registered!" });
+//     }
+//     const hashPassword = await bcrypt.hash(password, 10);
+//     const newUser = new User({
+//       name: name,
+//       email: email,
+//       password: hashPassword,
+//     });
+//     await newUser.save();
+//     return res
+//     .status(201)
+//     .json({ message: "User registered successfully!", newUser });
+//   } catch (error) {
+//     console.log("error", error);
+//     return res.status(500).json({ error: "Internal server error!" });
+//   }
+// };
+//for Register Login
+
 export const SignUp = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
   try {
@@ -11,28 +42,32 @@ export const SignUp = async (req, res) => {
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ error: "Password do not matches" });
+      return res.status(400).json({ error: "Passwords do not match" });
     }
+
     const user = await User.findOne({ email: email });
     if (user) {
       return res.status(400).json({ error: "User already registered!" });
     }
+
     const hashPassword = await bcrypt.hash(password, 10);
+    const photoUrl = req.file ? req.file.path : null;
+
     const newUser = new User({
       name: name,
       email: email,
       password: hashPassword,
+      photo: photoUrl,
     });
+
     await newUser.save();
-    return res
-    .status(201)
-    .json({ message: "User registered successfully!", newUser });
+    return res.status(201).json({ message: "User registered successfully!", newUser });
   } catch (error) {
     console.log("error", error);
     return res.status(500).json({ error: "Internal server error!" });
   }
 };
-//for Register Login
+
 export const Login = async (req, res) => 
   {
   const { email, password } = req.body;
@@ -75,7 +110,6 @@ export const LogOut = async (req, res) => {
   {
     res.cookie('jwt', '', 
     { 
-
       httpOnly: true,
       expires: new Date(0),           
       secure: true,                
@@ -83,7 +117,6 @@ export const LogOut = async (req, res) => {
       path: '/',    
     });
     return res.status(201).json({ message: "User Loged Out successfully!" });
-
   } 
   catch (error) 
   {
