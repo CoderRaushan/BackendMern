@@ -104,6 +104,7 @@ export const Login = async (req, res) =>
       _id: user._id,
       name: user.name,
       email: user.email,
+      photo: user.photo,
     });
   } catch (error) 
   {
@@ -194,7 +195,7 @@ export const GetUserData = (req, res) =>
         const name = decoded.name;
         const email = decoded.email;
         const photo=decoded.photo;
-        return res.json({ userId, name, email,photo });
+        return res.json({ userId, name, email, photo });
       }catch(err)
       {
         console.log("i am comming");
