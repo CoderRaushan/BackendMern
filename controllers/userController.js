@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwtTokenFunction from "../jwt/JwtToken.js";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinary } from 'cloudinary';
 //for Register user
 // export const SignUp = async (req, res) => {
 //   const { name, email, password, confirmPassword } = req.body;
@@ -34,39 +35,45 @@ import jwt from "jsonwebtoken";
 // };
 //for Register Login
 
-export const SignUp = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
-  try {
-    if (!name || !email || !password || !confirmPassword) {
-      return res.status(400).json({ error: "All fields are required!" });
-    }
+// export const SignUp = async (req, res) => {
+//   const file=req.files.photo;
+//   cloudinary.uploader.upload(file.tempFilePath,(err,res)=>
+//   {
+//    const PhotoUrl=res.url;
+//    const { name, email, password, confirmPassword } = req.body;
+//    const newUser = new User({
+//     name: name,
+//     email: email,
+//     password: hashPassword,
+//     photo: PhotoUrl,
+//   });
+//   });
 
-    if (password !== confirmPassword) {
-      return res.status(400).json({ error: "Passwords do not match" });
-    }
+ 
+//   try {
+//     if (!name || !email || !password || !confirmPassword) {
+//       return res.status(400).json({ error: "All fields are required!" });
+//     }
+//     if (password !== confirmPassword) 
+//     {
+//       return res.status(400).json({ error: "Passwords do not match" });
+//     }
 
-    const user = await User.findOne({ email: email });
-    if (user) {
-      return res.status(400).json({ error: "User already registered!" });
-    }
+//     const user = await User.findOne({ email: email });
+//     if (user) {
+//       return res.status(400).json({ error: "User already registered!" });
+//     }
+//     const hashPassword = await bcrypt.hash(password, 10);
 
-    const hashPassword = await bcrypt.hash(password, 10);
-    const photoUrl = req.file ? req.file.path : null;
+    
 
-    const newUser = new User({
-      name: name,
-      email: email,
-      password: hashPassword,
-      photo: photoUrl,
-    });
-
-    await newUser.save();
-    return res.status(201).json({ message: "User registered successfully!", newUser });
-  } catch (error) {
-    console.log("error", error);
-    return res.status(500).json({ error: "Internal server error!" });
-  }
-};
+//     await newUser.save();
+//     return res.status(201).json({ message: "User registered successfully!", newUser });
+//   } catch (error) {
+//     console.log("error", error);
+//     return res.status(500).json({ error: "Internal server error!" });
+//   }
+// };
 
 export const Login = async (req, res) => 
   {
@@ -125,6 +132,45 @@ export const LogOut = async (req, res) => {
   }
 };
 
+export const SignUp = async (req, res) => {
+  const { name, email, password, confirmPassword } = req.body;
+  try {
+    if (!name || !email || !password || !confirmPassword) {
+      return res.status(400).json({ error: "All fields are required!" });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "Passwords do not match" });
+    }
+
+    const user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ error: "User already registered!" });
+    }
+
+    // Upload photo to Cloudinary
+    const file = req.files?.photo; // Optional chaining to avoid crashing if photo isn't provided
+    let photoUrl = "";
+    if (file) {
+      const uploadResult = await cloudinary.uploader.upload(file.tempFilePath);
+      photoUrl = uploadResult.url;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      photo: photoUrl,
+    });
+
+    await newUser.save();
+    return res.status(201).json({ message: "User registered successfully!", newUser });
+  } catch (error) {
+    console.error("SignUp error:", error);
+    return res.status(500).json({ error: "Internal server error!" });
+  }
+};
 //for Getuser data
 export const GetUserData = (req, res) => 
   {
@@ -147,7 +193,8 @@ export const GetUserData = (req, res) =>
         const userId = decoded.userId;
         const name = decoded.name;
         const email = decoded.email;
-        return res.json({ userId, name, email });
+        const photo=decoded.photo;
+        return res.json({ userId, name, email,photo });
       }catch(err)
       {
         console.log("i am comming");
