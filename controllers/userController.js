@@ -95,7 +95,7 @@ export const Login = async (req, res) =>
 
     if (user) 
     {
-      jwtTokenFunction(user._id, user.name, user.email, res); 
+      jwtTokenFunction(user._id, user.name, user.email,user.photo, res); 
     }
 
     return res.status(200).json(
@@ -194,7 +194,7 @@ export const GetUserData = (req, res) =>
         const userId = decoded.userId;
         const name = decoded.name;
         const email = decoded.email;
-        const photo=decoded.photo;
+        const photo= decoded.photo;
         return res.json({ userId, name, email, photo });
       }catch(err)
       {
