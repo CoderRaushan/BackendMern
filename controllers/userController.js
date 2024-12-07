@@ -189,8 +189,8 @@ export const GetUserData = (req, res) =>
           console.log("Token verification error:", err); 
           return res.status(403).json({ error: "Invalid token" });
         }
-        console.log("i am comming");
-        console.log("decoded data is :",decoded.userId);
+        // console.log("i am comming");
+        // console.log("decoded data is :",decoded.userId);
         const userId = decoded.userId;
         const name = decoded.name;
         const email = decoded.email;

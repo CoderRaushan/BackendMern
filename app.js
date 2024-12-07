@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import UserRouter from "./routes/userRoute.js";
-// import fileUpload from 'express-fileupload'
 import fileUpload from "express-fileupload";
 const app = express();
 dotenv.config();
@@ -14,8 +13,7 @@ app.use(fileUpload({
   useTempFiles:true
 }));
 const corsOptions = {
-  origin: ["https://rausauth.netlify.app","http://localhost:5173", "https://coderraushan.github.io"], // exact frontend URLs
-  // origin:"http://localhost:5173",
+  origin: ["http://localhost:5174"], 
   credentials: true, 
 };
 app.use(cors(corsOptions));
